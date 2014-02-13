@@ -37,11 +37,12 @@ if [[ $OSX_VERSION =~ ^10\.9 ]]; then
 
 You are running OS X 10.9, so you will first need to install Xcode.
 
-Go to the App Store and install Xcode.
+1. Go to the App Store and install Xcode.
+2. Open Xcode and agree to the terms of service.
 
-I\'ll start working again as soon as I see that Xcode...'
+I\'ll start working again as soon as I see that Xcode/agreement...'
 
-    until $(xcodebuild -version > /dev/null 2>&1); do
+    until $(xcodebuild -version > /dev/null 2>&1) && $(xcodebuild 2>&1 > /dev/null | grep -qv license); do
       sleep 60
     done
   fi
