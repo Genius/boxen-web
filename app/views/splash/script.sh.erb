@@ -31,15 +31,29 @@ Command Line Tools to continue.
 fi
 
 if [[ $OSX_VERSION =~ ^10\.9 ]]; then
+
+  if [ ! $(xcodebuild -version > /dev/null 2>&1) ]; then
+    printf "%s\n" $'
+
+You are running OS X 10.9, so you will first need to install Xcode.
+
+Go to the App Store and install Xcode.
+
+I\'ll start working again as soon as I see that Xcode...'
+
+    until $(xcodebuild -version > /dev/null 2>&1); do
+      sleep 60
+    done
+  fi
+
   printf "%s\n" $'
 
-Since you are running OS X 10.9, you will need to install the Command
-Line Tools (even if you already have Xcode installed).
+Ok, now you need to install the command line tools:
 
   1. You should see a pop-up asking you to install them in a moment.
   2. Click Install!'
 
-  until $(gcc -v >/dev/null) && test -d /usr/include; do
+  until $(gcc -v >/dev/null 2>&1) && test -d /usr/include; do
     sleep 60
   done
 fi
