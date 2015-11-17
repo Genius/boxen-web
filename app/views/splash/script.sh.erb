@@ -9,8 +9,8 @@ fi
 set +e
 OSX_VERSION=$(sw_vers -productVersion | awk -F "." '{print $2}')
 
-if [ "$OSX_VERSION" -lt 8 ] || [ "$OSX_VERSION" -gt 10 ]; then
-    echo 'You must be running on Mountain Lion, Mavericks or Yosemite!'
+if [ "$OSX_VERSION" -lt 8 ] || [ "$OSX_VERSION" -gt 11 ]; then
+    echo 'You must be running on Mountain Lion, Mavericks, Yosemite or El Capitan!'
     exit 1
 fi
 set -e
@@ -54,13 +54,14 @@ I\'ll start working again as soon as I see that Xcode/agreement...'
   done
 fi
 
-# on 10.9 and 10.10, we can leverage SUS to get the latest CLI tools
+# on 10.9 and above we can leverage SUS to get the latest CLI tools
+
 if [[ "$OSX_VERSION" -ge 9 ]] && [[ ! -d /usr/include ]]; then
   echo "
 --> Installing command-line tools for OS X ${OSX_VERSION}"
 
   [ "$OSX_VERSION" -eq 9 ]  && TOOLS_REGEX="Command Line Developer"
-  [ "$OSX_VERSION" -eq 10 ] && TOOLS_REGEX="Command Line Tools"
+  [ "$OSX_VERSION" -ge 10 ] && TOOLS_REGEX="Command Line Tools"
   PLACEHOLDER=/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
 
   # create the placeholder file that's checked by CLI updates' .dist code
