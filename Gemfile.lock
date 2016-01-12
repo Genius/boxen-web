@@ -70,7 +70,6 @@ GEM
     jwt (1.5.1)
     kgio (2.9.3)
     launchy (2.4.3)
-
       addressable (~> 2.3)
     mail (2.5.4)
       mime-types (~> 1.16)
