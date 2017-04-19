@@ -4,10 +4,10 @@ class AuthController < ApplicationController
   def create
     if access?
       user = User.where(
-        :github_id => auth_hash['uid'],
-        :login => auth_hash['info']['nickname']
+        :github_id => auth_hash['uid']
       ).first_or_create
 
+      user.login = auth_hash['info']['nickname']
       user.access_token = auth_hash.credentials['token']
       user.save
 
@@ -35,9 +35,29 @@ class AuthController < ApplicationController
   end
 
   def access?
+    (check_org_access? && org_access?) ||
     (check_team_access? && team_access?) ||
     (check_user_access? && user_access?) ||
-    (!check_team_access? && !check_user_access?)
+    (!check_org_access? && !check_team_access? && !check_user_access?)
+  end
+
+  def check_org_access?
+    !ENV['GITHUB_ORG'].nil?
+  end
+
+  def org_access?
+    nick   = auth_hash['info']['nickname']
+
+    host   = github_api_url
+    path   = "/orgs/#{ENV['GITHUB_ORG']}/members/#{nick}"
+    params = "access_token=#{auth_hash.credentials['token']}"
+    uri    = URI.parse("#{host}#{path}?#{params}")
+
+    http         = Net::HTTP.new(uri.host, uri.port)
+    request      = Net::HTTP::Get.new("#{uri.path}?#{uri.query}")
+    http.use_ssl = true
+
+    http.request(request).code == '204'
   end
 
   def check_team_access?
