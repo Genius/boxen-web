@@ -12,6 +12,3 @@ test:
   database: boxen_test
   pool: 5
   port: <%= ENV["BOXEN_POSTGRESQL_PORT"] || 5432 %>
-
-production:
-  development
